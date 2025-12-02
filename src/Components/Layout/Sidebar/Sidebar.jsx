@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
+  CalendarCheck,
   CarFront,
+  FileText,
   Menu,
   X,
   Bookmark,
@@ -30,9 +32,10 @@ export default function Sidebar({ currentView, setCurrentView }) {
 
   const menuItems = [
     { id: "dashboard", name: "Dashboard", icon: LayoutDashboard },
-    { id: "booking", name: "Booking", icon: Bookmark },
+    { id: "slot", name: "Slot Management", icon: CalendarCheck },
     { id: "entry", name: "Vehicle Entry", icon: CarFront },
     { id: "exit", name: "Vehicle Exit & Payment", icon: CreditCard },
+    { id: "reports", name: "Reports", icon: FileText },
   ];
 
   const handleLinkClick = (id) => {
@@ -41,72 +44,82 @@ export default function Sidebar({ currentView, setCurrentView }) {
   };
 
   return (
-    <div
-      className={`h-screen mt-[-80px] bg-gradient-to-r from-[#0f4c5c] via-[#1e88a8] to-[#2596be] text-white flex flex-col shadow-2xl transition-all duration-500
-        ${isCollapsed && !isMobile ? "w-24" : "w-80"}
-        ${isMobile ? "fixed top-0 left-0 z-40" : "fixed"}
-        ${isMobile && !isMobileOpen ? "-translate-x-full" : "translate-x-0"}
-      `}
-    >
+    <>
+      {/* Mobile toggle button */}
       {isMobile && (
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="fixed top-4 left-4 bg-[#0f4c5c] p-3 rounded-xl text-white shadow-xl"
+          className="fixed top-4 left-4 bg-[#0f4c5c] p-3 rounded-xl text-white shadow-xl z-50"
         >
           {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       )}
 
-      {!isMobile && (
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-4 top-8 bg-white text-[#1e88a8] p-2 rounded-full shadow-lg"
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
-      )}
-
       <div
-        className={`flex items-center gap-3 px-6 py-6 transition-all ${
-          isCollapsed ? "justify-center" : ""
-        }`}
+        className={`h-screen mt-[-78px] bg-gradient-to-r from-[#0f4c5c] via-[#1e88a8] to-[#2596be] text-white flex flex-col shadow-2xl transition-all duration-500
+        ${isCollapsed && !isMobile ? "w-24" : "w-80"}
+        ${isMobile ? "fixed top-0 left-0 z-40" : "relative"}
+        ${isMobile && !isMobileOpen ? "-translate-x-full" : "translate-x-0"}
+      `}
       >
-        <Image
-          src="/logo.jpeg"
-          alt="Logo"
-          width={isCollapsed ? 50 : 80}
-          height={isCollapsed ? 50 : 80}
-          className="rounded-lg shadow-xl"
-        />
-        {!isCollapsed && (
-          <div>
-            <h1 className="text-2xl font-bold">Parking System</h1>
-            <p className="text-xs text-cyan-200/70">Book . Park . Exit</p>
-          </div>
+        {/* Desktop collapse toggle */}
+        {!isMobile && (
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="absolute -right-4 top-8 bg-white text-[#1e88a8] p-2 rounded-full shadow-lg"
+          >
+            {isCollapsed ? (
+              <ChevronRight size={20} />
+            ) : (
+              <ChevronLeft size={20} />
+            )}
+          </button>
         )}
-      </div>
 
-      <nav className="flex flex-col px-4 gap-2 flex-1">
-        {menuItems.map((item) => {
-          const isActive = currentView === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleLinkClick(item.id)}
-              className={`flex items-center gap-4 px-5 py-4 rounded-xl duration-300
-              ${
-                isActive
-                  ? "bg-white text-[#1e88a8] shadow-xl"
-                  : "hover:bg-white/20"
-              }
-              ${isCollapsed ? "justify-center" : ""}`}
-            >
-              <item.icon size={22} />
-              {!isCollapsed && <span>{item.name}</span>}
-            </button>
-          );
-        })}
-      </nav>
-    </div>
+        {/* Logo */}
+        <div
+          className={`flex items-center gap-3 px-6 py-6 transition-all ${
+            isCollapsed ? "justify-center" : ""
+          }`}
+        >
+          <Image
+            src="/logo.jpeg"
+            alt="Logo"
+            width={isCollapsed ? 50 : 80}
+            height={isCollapsed ? 50 : 80}
+            className="rounded-lg shadow-xl"
+          />
+          {!isCollapsed && (
+            <div>
+              <h1 className="text-2xl font-bold">Parking System</h1>
+              <p className="text-xs text-cyan-200/70">Book . Park . Exit</p>
+            </div>
+          )}
+        </div>
+
+        {/* Menu */}
+        <nav className="flex flex-col px-4 gap-2 flex-1">
+          {menuItems.map((item) => {
+            const isActive = currentView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleLinkClick(item.id)}
+                className={`flex items-center gap-4 px-5 py-4 rounded-xl duration-300
+                ${
+                  isActive
+                    ? "bg-white text-[#1e88a8] shadow-xl"
+                    : "hover:bg-white/20"
+                }
+                ${isCollapsed ? "justify-center" : ""}`}
+              >
+                <item.icon size={22} />
+                {!isCollapsed && <span>{item.name}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+    </>
   );
 }
